@@ -1,5 +1,8 @@
 //cpp
 #include "tic_tac_toe.h"
+#include <iostream>
+
+// implement functions like start_game, mark_board, game_over etc.
 
 // Check if the board is full (Game Over)
 bool TicTacToe::game_over() {
@@ -51,4 +54,21 @@ bool TicTacToe::check_board_full() {
 // Clear the board for a new game
 void TicTacToe::clear_board() {
     pegs.assign(9, " ");
+}
+std::ostream& operator<<(std::ostream& out, const TicTacToe& game) {
+    for (size_t i = 0; i < game.pegs.size(); i++) {
+        out << game.pegs[i];
+        if ((i + 1) % 3 == 0) out << "\n";
+        else out << " | ";
+    }
+    return out;
+}
+
+std::istream& operator>>(std::istream& in, TicTacToe& game) {
+    int position;
+    std::cout << "Player " << game.get_player() << ", enter position (1-9): ";
+    in >> position;
+    game.mark_board(position);
+    return in;
+    
 }
