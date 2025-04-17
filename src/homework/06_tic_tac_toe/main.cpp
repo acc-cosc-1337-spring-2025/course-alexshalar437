@@ -1,10 +1,21 @@
-#include "tic_tac_toe.h"
 #include "tic_tac_toe_manager.h"
+#include "tic_tac_toe_3.h"
+#include "tic_tac_toe_4.h"
+#include <memory>
 #include <iostream>
 
 int main() {
-    TicTacToe game;
+    std::unique_ptr<TicTacToe> game;
     TicTacToeManager manager;
+
+    int choice;
+    std::cout << "Play TicTacToe 3 (1) or 4 (2)? ";
+    std::cin >> choice;
+
+    if (choice == 1)
+        game = std::make_unique<TicTacToe3>();
+    else
+        game = std::make_unique<TicTacToe4>();
 
     std::string first_player;
     char cont;
@@ -17,20 +28,20 @@ int main() {
             std::cin >> first_player;
         }
 
-        game.start_game(first_player);
+        game->start_game(first_player);
 
         int position;
-        while (!game.game_over()) {
-            std::cout << game;
-            std::cout << "Enter position (1-9): ";
+        while (!game->game_over()) {
+            game->display_board();
+            std::cout << "Enter position: ";
             std::cin >> position;
-            game.mark_board(position);
+            game->mark_board(position);
         }
 
-        std::cout << game;
-        std::cout << "Game Over! Winner: " << game.get_winner() << "\n";
+        game->display_board();
+        std::cout << "Game Over! Winner: " << game->get_winner() << "\n";
 
-        manager.save_game(game);
+        manager.save_game(*game);
 
         int x, o, t;
         manager.get_winner_total(o, x, t);
@@ -39,7 +50,20 @@ int main() {
         std::cout << "Play again? (y/n): ";
         std::cin >> cont;
 
+        if (cont == 'y' || cont == 'Y') {
+            std::cout << "Play TicTacToe 3 (1) or 4 (2)? ";
+            std::cin >> choice;
+
+            if (choice == 1)
+                game = std::make_unique<TicTacToe3>();
+            else
+                game = std::make_unique<TicTacToe4>();
+        }
+
     } while (cont == 'y' || cont == 'Y');
+
+    // Uncomment the following line if the display_games method is implemented in TicTacToeManager
+    // manager.display_games();
 
     return 0;
 }

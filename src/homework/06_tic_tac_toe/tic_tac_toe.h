@@ -8,28 +8,29 @@
 
 class TicTacToe {
 public:
+    explicit TicTacToe(int size); // Конструктор с указанием размера доски
     void start_game(std::string first_player);
     void mark_board(int position);
     bool game_over();
     void display_board() const;
-    std::string get_player() const;
+    std::string get_player() const { return player; }
     std::string get_winner() const;
 
     friend std::ostream& operator<<(std::ostream& out, const TicTacToe& game);
     friend std::istream& operator>>(std::istream& in, TicTacToe& game);
 
-private:
-    void set_next_player();
-    bool check_board_full();
-    void clear_board();
-    void set_winner(std::string winner);
-    bool check_column_win();
-    bool check_row_win();
-    bool check_diagonal_win();
-
+protected:
+    std::vector<std::string> pegs;
     std::string player;
     std::string winner;
-    std::vector<std::string> pegs{9, " "};
-};
+    int board_size; // Размер доски
 
+    virtual bool check_column_win();
+    virtual bool check_row_win();
+    virtual bool check_diagonal_win();
+    void set_winner();
+    bool check_board_full() const;
+    void clear_board();
+    void set_next_player();
+};
 #endif
